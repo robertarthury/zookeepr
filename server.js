@@ -41,16 +41,6 @@ function findById(id, animalsArray) {
   return result;
 }
 
-//function createNewAnimal(body, animalsArray) {
-  //const animal = body;
-  //animalsArray.push(animal);
-  //fs.writefileSync(
-    //path.join(__dirname, './data/animals.json'),
-    //JSON.stringify({ animals: animalsArray }, null, 2)
-  //);
-  //return animal;
-//}
-
 app.get('/api/animals', (req, res) => {
   let results = animals;
   if (req.query) {
@@ -67,10 +57,25 @@ app.get('/api/animals/:id', (req, res) => {
     res.send(404);
   }
 });
+//this is the rout to create a homepage *the order of these routes matters*
+app.get('/', (req,res) => {
+  res.sendFile(path.join(__dirname, './public/index.html'));
+});
+//..." " animal page
+app.get('/animals', (req, res) => {
+  res.sendFile(path.join(__dirname, './public/animals.html'));
+})
+//.." " zookeepers page
+app.get('/zookeepers', (req, res) => {
+  res.sendFile(path.join(__dirname, './public/zookeepers.html'));
+})
+//..wildcard route
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, './public/index.html'));
+})
 app.post('/api/animals', (req, res) => {
   // set id based on what the next index of the array will be
   req.body.id = animals.length.toString();
-
   // if any data in req.body is incorrect, send 400 error back
   if (!validateAnimal(req.body)) {
     res.status(400).send('The animal is not properly formatted.');
